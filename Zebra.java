@@ -8,7 +8,7 @@ import java.util.Random;
  * @author Diego Abete and Harrison Buck
  * @version 1.0
  */
-public class Zebra extends Animal
+public class Zebra extends Prey
 {
     // TO WORK ON:
     // BREEDING WITH MALE AND FEMALE
@@ -25,19 +25,9 @@ public class Zebra extends Animal
     private static final double BREEDING_PROBABILITY = 0.00; //0.80
     // the maximum number of births.
     private static final int MAX_LITTER_SIZE = 1;
-    // a shared random number generator to control breeding.
-    private static final Random rand = Randomizer.getRandom();
     // the max food level of a zebra
     private static final int MAX_FOOD_LEVEL = 10;  // might change this to be more similar to fox implementation
-
-    // Individual characteristics (instance fields).
-
-    // the zebra's age
-    private int age;
-    // the zebra's food level, which is increased by eating grass
-    private int foodLevel;
-    // the zebra's gender
-    private String gender;
+    
 
     /**
      * Create a new Zebra. A zebra may be created with age
@@ -48,35 +38,10 @@ public class Zebra extends Animal
      */
     public Zebra(boolean randomAge, Location location)
     {
-        super(location);
-        chooseGender();
-        age = 0;
+        super(randomAge, location);
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
         }
-    }
-
-    /**
-     * @return gender of the zebra
-     */
-    public String getGender(){
-        return gender;
-    }
-
-    /**
-     * Chooses the gender of the zebra randomly
-     * @return gender of the zebra
-     */
-    private String chooseGender(){
-        Random zeroOrOne = new Random();
-        int zeroOrOneValue = zeroOrOne.nextInt(2); // generate a value between 0 and 1
-        if(zeroOrOneValue == 0){
-            gender = "Female";
-        }
-        else{
-            gender = "Male";
-        }
-        return gender;
     }
 
     /**
@@ -180,65 +145,46 @@ public class Zebra extends Animal
     }
 
     /**
-     * Increase the age.
-     * This could result in the zebra's death.
+     * Returns the maximum age of the zebra
      */
-    private void incrementAge(){
-        age++;
-        if(age > MAX_AGE) {
-            setDead();
-        }
+    @Override
+    public int getMaxAge()
+    {
+        return MAX_AGE;
     }
 
     /**
-     * Make this zebra more hungry, this could result in the zebra's death.
+     * Returns breeding age of the zebra
      */
-    private void incrementHunger(){
-        foodLevel--;
-        if(foodLevel <= 0) {
-            setDead();
-        }
+    @Override
+    public int getBreedingAge()
+    {
+        return BREEDING_AGE;
     }
-
+    
     /**
-     * Check whether or not this zebra is to give birth at this step
-     * New births will be made into free adjacent locations
-     * @param freeLocations the locations that are free in the current field.
+     * Returns breeding age of the zebra
      */
-    private void giveBirth(Field nextFieldState, List<Location> freeLocations) {
-        // New zebras are born into adjacent locations
-        // Get a list of adjacent free locations
-        int births = breed();
-        if(births > 0) {
-            for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
-                Location loc = freeLocations.remove(0);
-                Zebra young = new Zebra(false, loc);
-                nextFieldState.placeAnimal(young, loc);
-            }
-        }
+    @Override
+    public double getBreedingProbability()
+    {
+        return BREEDING_PROBABILITY;
     }
-
+    
     /**
-     * Generate a number representing the number of births,
-     * if it can breed
-     * @return The number of births (may be zero)
+     * Returns the maximum litter size of the zebra
      */
-    private int breed(){
-        int births;
-        if(canBreed() && rand.nextDouble() <= BREEDING_PROBABILITY) {
-            births = rand.nextInt(MAX_LITTER_SIZE) + 1;
-        }
-        else {
-            births = 0;
-        }
-        return births;
+    @Override
+    public int getMaxLitterSize()
+    {
+        return MAX_LITTER_SIZE;
     }
+    
+    @Override
+    protected Prey createYoung(Location loc)
+    {
+        return new Zebra(false,loc);
+    }
+    
 
-    /**
-     * A zebra can breed if it has reached the breeding age.
-     * @return true if the zebra can breed, false otherwise
-     */
-    private boolean canBreed() {
-        return age >= BREEDING_AGE;
-    }
 }

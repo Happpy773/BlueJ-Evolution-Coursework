@@ -8,7 +8,7 @@ import java.util.Random;
  * @author Diego Abete and Harrison Buck
  * @version 1.0
  */
-public class Gazelle extends Animal
+public class Gazelle extends Prey
 {
     // TO WORK ON:
     // 
@@ -24,19 +24,9 @@ public class Gazelle extends Animal
     private static final double BREEDING_PROBABILITY = 0.00; //0.65
     // the maximum number of births.
     private static final int MAX_LITTER_SIZE = 1;
-    // a shared random number generator to control breeding.
-    private static final Random rand = Randomizer.getRandom();
     // the max food level of a Gazelle
     private static final int MAX_FOOD_LEVEL = 6;  // might change this to be more similar to fox implementation
 
-    // Individual characteristics (instance fields).
-
-    // the Gazelle's age
-    private int age;
-    // the Gazelle's food level, which is increased by eating grass
-    private int foodLevel;
-    // the Gazelle's gender
-    private String gender;
 
     /**
      * Create a new Gazelle. A Gazelle may be created with age
@@ -47,35 +37,10 @@ public class Gazelle extends Animal
      */
     public Gazelle(boolean randomAge, Location location)
     {
-        super(location);
-        chooseGender();
-        age = 0;
+        super(randomAge, location);
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
         }
-    }
-
-    /**
-     * @return gender of the gazelle
-     */
-    public String getGender(){
-        return gender;
-    }
-
-    /**
-     * Chooses the gender of the Gazelle randomly
-     * @return gender of the Gazelle
-     */
-    private String chooseGender(){
-        Random zeroOrOne = new Random();
-        int zeroOrOneValue = zeroOrOne.nextInt(2); // generate a value between 0 and 1
-        if(zeroOrOneValue == 0){
-            gender = "Female";
-        }
-        else{
-            gender = "Male";
-        }
-        return gender;
     }
 
     /**
@@ -176,65 +141,43 @@ public class Gazelle extends Animal
     }
 
     /**
-     * Increase the age.
-     * This could result in the Gazelle's death.
+     * Returns the maximum age
      */
-    private void incrementAge(){
-        age++;
-        if(age > MAX_AGE) {
-            setDead();
-        }
+    public int getMaxAge()
+    {
+        return MAX_AGE;
+    }
+    
+    /**
+     * Returns breeding age of the gazelle
+     */
+    public double getBreedingProbability()
+    {
+        return BREEDING_PROBABILITY;
+    }
+    
+    /**
+     * Returns breeding age of the gazelle
+     */
+    public int getBreedingAge()
+    {
+        return BREEDING_AGE;
+    }
+    
+    /**
+     * Returns the maximum litter size of the gazelle
+     */
+    public int getMaxLitterSize()
+    {
+        return MAX_LITTER_SIZE;
+    }
+    
+    @Override
+    protected Prey createYoung(Location loc)
+    {
+        return new Gazelle(false,loc);
+    }
+    
     }
 
-    /**
-     * Make this Gazelle more hungry, this could result in the Gazelle's death.
-     */
-    private void incrementHunger(){
-        foodLevel--;
-        if(foodLevel <= 0) {
-            setDead();
-        }
-    }
 
-    /**
-     * Check whether or not this Gazelle is to give birth at this step
-     * New births will be made into free adjacent locations
-     * @param freeLocations the locations that are free in the current field.
-     */
-    private void giveBirth(Field nextFieldState, List<Location> freeLocations) {
-        // New Gazelles are born into adjacent locations
-        // Get a list of adjacent free locations
-        int births = breed();
-        if(births > 0) {
-            for (int b = 0; b < births && !freeLocations.isEmpty(); b++) {
-                Location loc = freeLocations.remove(0);
-                Gazelle young = new Gazelle(false, loc);
-                nextFieldState.placeAnimal(young, loc);
-            }
-        }
-    }
-
-    /**
-     * Generate a number representing the number of births,
-     * if it can breed
-     * @return The number of births (may be zero)
-     */
-    private int breed(){
-        int births;
-        if(canBreed() && rand.nextDouble() <= BREEDING_PROBABILITY) {
-            births = rand.nextInt(MAX_LITTER_SIZE) + 1;
-        }
-        else {
-            births = 0;
-        }
-        return births;
-    }
-
-    /**
-     * A Gazelle can breed if it has reached the breeding age.
-     * @return true if the Gazelle can breed, false otherwise
-     */
-    private boolean canBreed() {
-        return age >= BREEDING_AGE;
-    }
-}

@@ -26,9 +26,9 @@ public class Simulator
     // The probability that a cheetah will be created in any given position.
     private static final double CHEETAH_CREATION_PROBABILITY = 0.02; // 0.02
     // The probability that a lion will be created in any given position.
-    private static final double LION_CREATION_PROBABILITY = 0.00; //0.05
+    private static final double LION_CREATION_PROBABILITY = 0.05; //0.05
     // The probability that a hyena will be created in any given position.
-    private static final double HYENA_CREATION_PROBABILITY = 0.00; //0.06
+    private static final double HYENA_CREATION_PROBABILITY = 0.06; //0.06
     // The probability that a zebra will be created in any given position.
     private static final double ZEBRA_CREATION_PROBABILITY = 0.15; //0.15
     // The probability that a wildebeest will be created in any given position.

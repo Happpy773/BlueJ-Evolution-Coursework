@@ -45,12 +45,12 @@ public class SimulatorView extends JFrame
         setColor(Fox.class, Color.blue);
         
         //new code
-        setColor(Zebra.class, Color.cyan); //green 
-        setColor(Wildebeest.class, Color.cyan); //magenta
-        setColor(Gazelle.class, Color.green); //yellow
+        setColor(Zebra.class, Color.green); //green 
+        setColor(Wildebeest.class, Color.magenta); //magenta
+        setColor(Gazelle.class, Color.yellow); //yellow
         setColor(Cheetah.class, Color.red); //red
-        setColor(Lion.class, Color.red); //pink
-        setColor(Hyena.class, Color.orange); //cyan
+        setColor(Lion.class, Color.pink); //pink
+        setColor(Hyena.class, Color.cyan); //cyan
 
         setTitle("Savannah Simulation");
         stepLabel = new JLabel(STEP_PREFIX, JLabel.CENTER);
