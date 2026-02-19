@@ -9,7 +9,7 @@ import java.util.Random;
  * @author Diego Abete and Harrison Buck
  * @version 1.0
  */
-public class Hyena extends Animal
+public class Hyena extends Predator
 {
     // Characteristics shared by all Hyenas (class variables).
     // The age at which a Hyena can start to breed.
@@ -29,15 +29,6 @@ public class Hyena extends Animal
     // maximum food level of a Hyena
     private static final int MAX_FOOD_VALUE = 60;
 
-    // Individual characterstics (instance fields).
-
-    // The Hyena's age.
-    private int age;
-    // The Hyena's food level, which is increased by eating prey.
-    private int foodLevel;
-    // the Hyena's gender.
-    private String gender;
-
     /**
      * Create a Hyena. A Hyena can be created as a new born (age zero
      * and not hungry) or with a random age and food level.
@@ -47,8 +38,7 @@ public class Hyena extends Animal
      */
     public Hyena(boolean randomAge, Location location)
     {
-        super(location);
-        chooseGender();
+        super(randomAge, location);
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
         }
@@ -58,66 +48,6 @@ public class Hyena extends Animal
         }
         foodLevel = rand.nextInt(MAX_FOOD_VALUE);
     }
-
-    /**
-     * @return gender of the hyena
-     */
-    public String getGender(){
-        return gender;
-    }
-
-    /**
-     * Chooses the gender of the Hyena randomly
-     * @return gender of the Hyena
-     */
-    private String chooseGender(){
-        Random zeroOrOne = new Random();
-        int zeroOrOneValue = zeroOrOne.nextInt(2); // generate a value between 0 and 1
-        if(zeroOrOneValue == 0){
-            gender = "Female";
-        }
-        else{
-            gender = "Male";
-        }
-        return gender;
-    }
-
-    /**
-     * This will check the animal's adjacent locations and check whether there is another one 
-     * of its species. If there is, it will return the first one it finds.
-     * @return The animal found or null if no animal found
-     */
-    private Animal checkAnimalAdjacentLocation(Field currentField, Field nextFieldState){
-        List<Location> adjacentLocations = nextFieldState.getAdjacentLocations(getLocation()); //check whether this is nextFieldState or currentField
-        for(Location location: adjacentLocations){
-            Animal animal = currentField.getAnimalAt(location);
-            if(animal == null){
-                // do nothing
-            }
-            else if(animal instanceof Hyena hyena){
-                return animal;
-            }
-        }
-        //if reaches here it means that no corresponding animal was found
-        return null;
-    }
-
-    /**
-     * Checks whether or not one of the animals is male and the other female 
-     * otherwise, they cannot give birth
-     * @return true if yes, false if no
-     */
-    private boolean checkCompatibleGender(Animal animal1, Animal animal2){
-        if(animal1.getGender() == "Male" && animal2.getGender() == "Female"){
-            return true;
-        }
-        else if(animal1.getGender() == "Female" && animal2.getGender() == "Male"){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }   
 
     /**
      * This is what the Hyena does most of the time: it hunts for 
@@ -174,23 +104,11 @@ public class Hyena extends Animal
     }
 
     /**
-     * Increase the age. This could result in the Hyena's death.
+     * Returns the maximum age
      */
-    private void incrementAge() {
-        age++;
-        if(age > MAX_AGE) {
-            setDead();
-        }
-    }
-
-    /**
-     * Make this Hyena more hungry. This could result in the Hyena's death
-     */
-    private void incrementHunger() {
-        foodLevel--;
-        if(foodLevel <= 0) {
-            setDead();
-        }
+    public int getMaxAge()
+    {
+        return MAX_AGE;
     }
 
     /**
@@ -229,46 +147,35 @@ public class Hyena extends Animal
         }
         return foodLocation;
     }
-
+    
     /**
-     * Check whether this Hyena is to give birth at this step
-     * new births will be made into free adjacent locations
-     * @param freeLOcations The locations that are free in the current field.
+     * Returns breeding age of the Hyena
      */
-    private void giveBirth(Field nextFieldState, List<Location> freeLocations) {
-        // New Hyenas are born into adjacent locations.
-        // Get a list of adjacent free locations.
-        int births = breed();
-        if(births>0) {
-            for (int b = 0; b < births && ! freeLocations.isEmpty(); b++) {
-                Location loc = freeLocations.remove(0);
-                Hyena young = new Hyena(false, loc);
-                nextFieldState.placeAnimal(young, loc);
-            }
-        }
+    public double getBreedingProbability()
+    {
+        return BREEDING_PROBABILITY;
     }
-
+    
     /**
-     * Generate a number representing the number of births,
-     * if it can breed.
-     * @return The number of births (may be zero).
+     * Returns breeding age of the Hyena
      */
-    private int breed() {
-        int births;
-        if(canBreed() && rand.nextDouble() <= BREEDING_PROBABILITY) {
-            births = rand.nextInt(MAX_LITTER_SIZE) + 1;
-        }
-        else {
-            births = 0;
-        }
-        return births;
+    public int getBreedingAge()
+    {
+        return BREEDING_AGE;
     }
-
+    
     /**
-     * A Hyena can breed if it has reached the breeding age.
+     * Returns the maximum litter size of the Hyena
      */
-    private boolean canBreed() {
-        return age >= BREEDING_AGE;
+    public int getMaxLitterSize()
+    {
+        return MAX_LITTER_SIZE;
+    }
+    
+    @Override
+    protected Predator createYoung(Location loc)
+    {
+        return new Hyena(false,loc);
     }
 }
 

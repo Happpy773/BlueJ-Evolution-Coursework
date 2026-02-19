@@ -9,7 +9,7 @@ import java.util.Random;
  * @author Diego Abete and Harrison Buck
  * @version 1.0
  */
-public class Lion extends Animal
+public class Lion extends Predator
 {
     // Characteristics shared by all lions (class variables).
     // The age at which a lion can start to breed.
@@ -29,14 +29,6 @@ public class Lion extends Animal
     // maximum food level of a lion
     private static final int MAX_FOOD_VALUE = 70;
 
-    // Individual characterstics (instance fields).
-
-    // The lion's age.
-    private int age;
-    // The lion's food level, which is increased by eating prey.
-    private int foodLevel;
-    // the lion's gender.
-    private String gender;
 
     /**
      * Create a lion. A lion can be created as a new born (age zero
@@ -47,8 +39,7 @@ public class Lion extends Animal
      */
     public Lion(boolean randomAge, Location location)
     {
-        super(location);
-        chooseGender();
+        super(randomAge, location);
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
         }
@@ -57,64 +48,7 @@ public class Lion extends Animal
             foodLevel = MAX_FOOD_VALUE;
         }
         foodLevel = rand.nextInt(MAX_FOOD_VALUE);
-    }
-
-    /**
-     * @return gender of the lion
-     */
-    public String getGender(){
-        return gender;
-    }
-
-    /**
-     * Chooses the gender of the lion randomly
-     * @return gender of the lion
-     */
-    private String chooseGender(){
-        Random zeroOrOne = new Random();
-        int zeroOrOneValue = zeroOrOne.nextInt(2); // generate a value between 0 and 1
-        if(zeroOrOneValue == 0){
-            gender = "Female";
-        }
-        else{
-            gender = "Male";
-        }
-        return gender;
-    }
-
-    /**
-     * This will check the animal's adjacent locations and check whether there is another one 
-     * of its species. If there is, it will return the first one it finds.
-     * @return The animal found or null if no animal found
-     */
-    private Animal checkAnimalAdjacentLocation(Field currentField, Field nextFieldState){
-        List<Location> adjacentLocations = nextFieldState.getAdjacentLocations(getLocation()); //check whether this is nextFieldState or currentField
-        for(Location location: adjacentLocations){
-            Animal animal = currentField.getAnimalAt(location);
-            if(animal == null){
-                // do nothing
-            }
-            else if(animal instanceof Lion lion){
-                return animal;
-            }
-        }
-        //if reaches here it means that no corresponding animal was found
-        return null;
-    }    
-
-    /**
-     * Checks whether or not one of the animals is male and the other female 
-     * otherwise, they cannot give birth
-     * @return true if yes, false if no
-     */
-    private boolean checkCompatibleGender(Animal animal1, Animal animal2){
-        if(animal1.getGender().equals(animal2.getGender())){
-            return false;
-        }
-        else{
-            return true;
-        }
-    }    
+    } 
 
     /**
      * This is what the lion does most of the time: it hunts for 
@@ -228,23 +162,12 @@ public class Lion extends Animal
     }
 
     /**
-     * Increase the age. This could result in the lion's death.
+     * Returns the maximum age
      */
-    private void incrementAge() {
-        age++;
-        if(age > MAX_AGE) {
-            setDead();
-        }
-    }
-
-    /**
-     * Make this lion more hungry. This could result in the lion's death
-     */
-    private void incrementHunger() {
-        foodLevel--;
-        if(foodLevel <= 0) {
-            setDead();
-        }
+    
+    public int getMaxAge()
+    {
+        return MAX_AGE;
     }
 
     /**
@@ -283,45 +206,34 @@ public class Lion extends Animal
         }
         return foodLocation;
     }
-
+    
     /**
-     * Check whether this lion is to give birth at this step
-     * new births will be made into free adjacent locations
-     * @param freeLOcations The locations that are free in the current field.
+     * Returns breeding age of the Lion
      */
-    private void giveBirth(Field nextFieldState, List<Location> freeLocations) {
-        // New lions are born into adjacent locations.
-        // Get a list of adjacent free locations.
-        int births = breed();
-        if(births>0) {
-            for (int b = 0; b < births && ! freeLocations.isEmpty(); b++) {
-                Location loc = freeLocations.remove(0);
-                Lion young = new Lion(false, loc);
-                nextFieldState.placeAnimal(young, loc);
-            }
-        }
+    public double getBreedingProbability()
+    {
+        return BREEDING_PROBABILITY;
     }
-
+    
     /**
-     * Generate a number representing the number of births,
-     * if it can breed.
-     * @return The number of births (may be zero).
+     * Returns breeding age of the Lion
      */
-    private int breed() {
-        int births;
-        if(canBreed() && rand.nextDouble() <= BREEDING_PROBABILITY) {
-            births = rand.nextInt(MAX_LITTER_SIZE) + 1;
-        }
-        else {
-            births = 0;
-        }
-        return births;
+    public int getBreedingAge()
+    {
+        return BREEDING_AGE;
     }
-
+    
     /**
-     * A lion can breed if it has reached the breeding age.
+     * Returns the maximum litter size of the Lion
      */
-    private boolean canBreed() {
-        return age >= BREEDING_AGE;
+    public int getMaxLitterSize()
+    {
+        return MAX_LITTER_SIZE;
+    }
+    
+    @Override
+    protected Predator createYoung(Location loc)
+    {
+        return new Lion(false,loc);
     }
 }
