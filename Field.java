@@ -116,7 +116,7 @@ public class Field
     /**
      * Print out the number of foxes and rabbits in the field.
      */
-    public void fieldStats(String time)
+    public void fieldStats(String time, String weather)
     {
         int numFoxes = 0, numRabbits = 0;
         int numZebras = 0, numWildebeests = 0, numGazelles = 0;
@@ -173,6 +173,7 @@ public class Field
                            " Hyenas: " + numHyenas);
                            
         System.out.println("Time: " + time);
+        System.out.println("Weather: " + weather);
     }
 
     /**

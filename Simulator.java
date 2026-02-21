@@ -36,6 +36,13 @@ public class Simulator
     // The probability that a gazelle will be created in any given position.
     private static final double GAZELLE_CREATION_PROBABILITY = 0.21; //0.21
     
+    // placeholder for now
+    private static final double RAINY = 0.00;
+    // placeholder for now
+    private static final double THUNDERSTORM = 0.00;
+    // placeholder for now
+    private static final double DROUGHT = 0.00;
+    
 
     // The current state of the field.
     private Field field;
@@ -45,6 +52,8 @@ public class Simulator
     private final SimulatorView view;
     // The time of day (either "Day" or "Night")
     private String time;
+    // The weather 
+    private String weather;
 
     /**
      * Construct a simulation field with default size.
@@ -54,6 +63,40 @@ public class Simulator
         this(DEFAULT_DEPTH, DEFAULT_WIDTH);
         // new code
         time = "Day";
+        weather = "Sunny";
+    }
+    
+    /**
+     * This method randomly assigns a new weather each step
+     */
+    public void chooseWeather(){
+        Random rand = new Random();
+        int randomNumber = rand.nextInt(10); //will return numbers from 0-9
+        // 4 different types (may change after): sunny, rainy, thunderstorm, drought
+        // drought will be value 9
+        // thunderstorm will be value 8
+        // rainy will be values 4-7
+        // sunny will be values 0-3
+        if(randomNumber == 9){
+            weather = "Drought";
+        }
+        else if(randomNumber == 8){
+            weather = "Thunderstorm";
+        }
+        else if(randomNumber == 4 || randomNumber == 5 || randomNumber == 6 || randomNumber == 7){
+            weather = "Rainy";
+        }
+        else{
+            weather = "Sunny";
+        }
+    }
+    
+    /**
+     * Return the current weather
+     * @return weather
+     */
+    public String getWeather(){
+        return weather;
     }
     
     /**
@@ -122,6 +165,8 @@ public class Simulator
         else{
             time = "Night";
         }
+        
+        chooseWeather();
         
         
         // Use a separate Field to store the starting state of
@@ -211,7 +256,7 @@ public class Simulator
     public void reportStats()
     {
         //System.out.print("Step: " + step + " ");
-        field.fieldStats(time);
+        field.fieldStats(time, weather);
     }
     
     /**
