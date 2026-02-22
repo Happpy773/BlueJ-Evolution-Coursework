@@ -18,6 +18,12 @@ public class Field
     private final Map<Location, Animal> field = new HashMap<>();
     // The animals.
     private final List<Animal> animals = new ArrayList<>();
+    // A map of the grass 
+    private static int[][] grassMap;
+    // The maximum leve grass can grow to    
+    private final int MAX_GRASS_LEVEL = 5;
+    
+    
 
     /**
      * Represent a field of the given dimensions.
@@ -28,6 +34,10 @@ public class Field
     {
         this.depth = depth;
         this.width = width;
+        if(grassMap == null)
+        {
+            grassMap = new int[depth][width];
+        }
     }
 
     /**
@@ -122,17 +132,17 @@ public class Field
         int numZebras = 0, numWildebeests = 0, numGazelles = 0;
         int numCheetahs = 0, numLions = 0, numHyenas = 0;
         for(Animal anAnimal : field.values()) {
-            if(anAnimal instanceof Fox fox) {
-                if(fox.isAlive()) {
-                    numFoxes++;
-                }
-            }
-            else if(anAnimal instanceof Rabbit rabbit) {
-                if(rabbit.isAlive()) {
-                    numRabbits++;
-                }
-            }
-            else if(anAnimal instanceof Zebra zebra) {
+            // if(anAnimal instanceof Fox fox) {
+                // if(fox.isAlive()) {
+                    // numFoxes++;
+                // }
+            // }
+            // else if(anAnimal instanceof Rabbit rabbit) {
+                // if(rabbit.isAlive()) {
+                    // numRabbits++;
+                // }
+            // }
+            if(anAnimal instanceof Zebra zebra) {
                 if(zebra.isAlive()) {
                     numZebras++;
                 }
@@ -259,5 +269,71 @@ public class Field
     public int getWidth()
     {
         return width;
+    }
+    
+    /**
+     * Grass grows faster in the rain, not at all in a heatwave, and normally any other time.
+     * Grass can grow to a set maximum level 
+     */
+    public void growGrass(String weather)
+    {
+        int growthAmount;
+        if(weather.equals("Rainy"))
+        {
+            growthAmount = 2; // grass grows twice as fast in the rain
+        }
+        else if(weather.equals("Heatwave"))
+        {
+            growthAmount = 0; //grass doesnt grow in a heatwave
+        }
+        else
+        {
+            growthAmount = 1;
+        }
+        
+        
+        for(int row = 0; row < depth; row++)
+        {
+            for(int col = 0; col < width; col++)
+            {
+                if(grassMap[row][col] < MAX_GRASS_LEVEL)
+                {
+                    grassMap[row][col] += growthAmount;
+                    if(grassMap[row][col] > MAX_GRASS_LEVEL)
+                    {
+                        grassMap[row][col] = MAX_GRASS_LEVEL;
+                    }
+                }
+            }
+        }
+    }
+    
+    /**
+     * return the value at the grass map location
+     */
+    public int getGrassAt(Location location)
+    {
+        return grassMap[location.row()][location.col()];
+    }
+    
+    /**
+     * Reset the grass value at that location to 0 after eating
+     */
+    public void consumeGrass(Location location)
+    {
+        grassMap[location.row()][location.col()] = 0; 
+    }
+    
+    public void printGrassMap()
+    {
+        System.out.println("---Current grass map state---");
+        for(int row = 0; row < depth; row++)
+        {
+            for(int col = 0; col < width; col++)
+            {
+                System.out.print(grassMap[row][col] + " " );
+            }
+            System.out.println();
+        }
     }
 }

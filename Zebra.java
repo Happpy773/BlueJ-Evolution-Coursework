@@ -18,15 +18,15 @@ public class Zebra extends Prey
 
     // Characteristics shared by all zebras (Class variables).
     // The age at which a zebra can start to breed.
-    private static final int BREEDING_AGE = 3;
+    private static final int BREEDING_AGE = 10;
     // the age to which a zebra can live.
-    private static final int MAX_AGE = 4000000; //40
+    private static final int MAX_AGE = 200; //40
     // the likelihood of a zebra breeding.
-    private static final double BREEDING_PROBABILITY = 0.00; //0.80
+    private static final double BREEDING_PROBABILITY = 0.12; //0.80
     // the maximum number of births.
     private static final int MAX_LITTER_SIZE = 1;
     // the max food level of a zebra
-    private static final int MAX_FOOD_LEVEL = 10;  // might change this to be more similar to fox implementation
+    private static final int MAX_FOOD_VALUE = 30;  // might change this to be more similar to fox implementation
     
 
     /**
@@ -41,7 +41,9 @@ public class Zebra extends Prey
         super(randomAge, location);
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
+            foodLevel = MAX_FOOD_VALUE;
         }
+        foodLevel = rand.nextInt(MAX_FOOD_VALUE);
     }
 
 
@@ -96,6 +98,15 @@ public class Zebra extends Prey
     protected Prey createYoung(Location loc)
     {
         return new Zebra(false,loc);
+    }
+    
+    /**
+     * Returns max food value of the zebra
+     */
+    @Override
+    public int getMaxFoodValue()
+    {
+        return MAX_FOOD_VALUE;
     }
     
 

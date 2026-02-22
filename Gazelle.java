@@ -17,15 +17,15 @@ public class Gazelle extends Prey
 
     // Characteristics shared by all Gazelles (Class variables).
     // The age at which a Gazelle can start to breed.
-    private static final int BREEDING_AGE = 1;
+    private static final int BREEDING_AGE = 5;
     // the age to which a Gazelle can live.
-    private static final int MAX_AGE = 1500000; //15
+    private static final int MAX_AGE = 150; //15
     // the likelihood of a Gazelle breeding.
-    private static final double BREEDING_PROBABILITY = 0.00; //0.65
+    private static final double BREEDING_PROBABILITY = 0.15; //0.65
     // the maximum number of births.
-    private static final int MAX_LITTER_SIZE = 1;
+    private static final int MAX_LITTER_SIZE = 2;
     // the max food level of a Gazelle
-    private static final int MAX_FOOD_LEVEL = 6;  // might change this to be more similar to fox implementation
+    private static final int MAX_FOOD_VALUE = 20;  // might change this to be more similar to fox implementation
 
 
     /**
@@ -40,6 +40,7 @@ public class Gazelle extends Prey
         super(randomAge, location);
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
+            foodLevel = MAX_FOOD_VALUE;
         }
     }
 
@@ -90,6 +91,15 @@ public class Gazelle extends Prey
     protected Prey createYoung(Location loc)
     {
         return new Gazelle(false,loc);
+    }
+    
+    /**
+     * Returns max food value of the gazelle
+     */
+    @Override
+    public int getMaxFoodValue()
+    {
+        return MAX_FOOD_VALUE;
     }
     
     }

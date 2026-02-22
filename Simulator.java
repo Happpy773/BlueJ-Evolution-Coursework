@@ -24,11 +24,11 @@ public class Simulator
     private static final double RABBIT_CREATION_PROBABILITY = 0.00; //was 0.08
 
     // The probability that a cheetah will be created in any given position.
-    private static final double CHEETAH_CREATION_PROBABILITY = 0.02; // 0.02
+    private static final double CHEETAH_CREATION_PROBABILITY = 0.01; // 0.02
     // The probability that a lion will be created in any given position.
-    private static final double LION_CREATION_PROBABILITY = 0.05; //0.05
+    private static final double LION_CREATION_PROBABILITY = 0.005; //0.05
     // The probability that a hyena will be created in any given position.
-    private static final double HYENA_CREATION_PROBABILITY = 0.06; //0.06
+    private static final double HYENA_CREATION_PROBABILITY = 0.01; //0.06
     // The probability that a zebra will be created in any given position.
     private static final double ZEBRA_CREATION_PROBABILITY = 0.15; //0.15
     // The probability that a wildebeest will be created in any given position.
@@ -72,13 +72,17 @@ public class Simulator
     public void chooseWeather(){
         Random rand = new Random();
         int randomNumber = rand.nextInt(10); //will return numbers from 0-9
-        // 4 different types (may change after): sunny, rainy, thunderstorm, drought
+        // 4 different types (may change after): sunny, rainy, thunderstorm, heatwave
         // drought will be value 9
         // thunderstorm will be value 8
         // rainy will be values 4-7
         // sunny will be values 0-3
+        // heatwave increases the rate of hunger decrease
+        // thunderstorm decreases the breeding rate of animals
+        // rainy increases the growth rate of plants
+        // sunny is normal base rates
         if(randomNumber == 9){
-            weather = "Drought";
+            weather = "Heatwave";
         }
         else if(randomNumber == 8){
             weather = "Thunderstorm";
@@ -167,7 +171,8 @@ public class Simulator
         }
         
         chooseWeather();
-        
+        field.growGrass(weather);
+        field.printGrassMap();
         
         // Use a separate Field to store the starting state of
         // the next step.
@@ -175,7 +180,7 @@ public class Simulator
 
         List<Animal> animals = field.getAnimals();
         for (Animal anAnimal : animals) {
-            anAnimal.act(field, nextFieldState, time);
+            anAnimal.act(field, nextFieldState, time, weather);
         }
         
         // Replace the old state with the new one.
@@ -204,18 +209,18 @@ public class Simulator
         field.clear();
         for(int row = 0; row < field.getDepth(); row++) {
             for(int col = 0; col < field.getWidth(); col++) {
-                if(rand.nextDouble() <= FOX_CREATION_PROBABILITY) {
-                    Location location = new Location(row, col);
-                    Fox fox = new Fox(true, location);
-                    field.placeAnimal(fox, location);
-                }
-                else if(rand.nextDouble() <= RABBIT_CREATION_PROBABILITY) {
-                    Location location = new Location(row, col);
-                    Rabbit rabbit = new Rabbit(true, location);
-                    field.placeAnimal(rabbit, location);
-                }
+                // if(rand.nextDouble() <= FOX_CREATION_PROBABILITY) {
+                    // Location location = new Location(row, col);
+                    // Fox fox = new Fox(true, location);
+                    // field.placeAnimal(fox, location);
+                // }
+                // else if(rand.nextDouble() <= RABBIT_CREATION_PROBABILITY) {
+                    // Location location = new Location(row, col);
+                    // Rabbit rabbit = new Rabbit(true, location);
+                    // field.placeAnimal(rabbit, location);
+                // }
                 
-                else if(rand.nextDouble() <= CHEETAH_CREATION_PROBABILITY){
+                if(rand.nextDouble() <= CHEETAH_CREATION_PROBABILITY){
                     Location location = new Location(row, col);
                     Cheetah cheetah = new Cheetah(true, location);
                     field.placeAnimal(cheetah, location);

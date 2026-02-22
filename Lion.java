@@ -15,19 +15,19 @@ public class Lion extends Predator
     // The age at which a lion can start to breed.
     private static final int BREEDING_AGE = 15;
     // the age to which a lion can live.
-    private static final int MAX_AGE = 1500000; //150
+    private static final int MAX_AGE = 200; //150
     // the likelihood of a lion breeding.
-    private static final double BREEDING_PROBABILITY = 0.08;
+    private static final double BREEDING_PROBABILITY = 0.09;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 4;
+    private static final int MAX_LITTER_SIZE = 2;
     // The food value of a single zebra.
-    private static final int ZEBRA_FOOD_VALUE = 9;
+    private static final int ZEBRA_FOOD_VALUE = 30;
     // the food value of a single wildebeest
-    private static final int WILDEBEEST_FOOD_VALUE = 6;
+    private static final int WILDEBEEST_FOOD_VALUE = 25;
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
     // maximum food level of a lion
-    private static final int MAX_FOOD_VALUE = 70;
+    private static final int MAX_FOOD_VALUE = 100;
 
 
     /**
@@ -57,9 +57,9 @@ public class Lion extends Predator
      * @param currentField The field currently occupied
      * @param nextFieldState The updated field.
      */
-    public void act2(Field currentField, Field nextFieldState, String time){
+    public void act2(Field currentField, Field nextFieldState, String time, String weather){
         incrementAge();
-        incrementHunger();
+        incrementHunger(weather);
         if(isAlive()){
             if(time.equals("Day")){
                 List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(getLocation());
@@ -70,7 +70,7 @@ public class Lion extends Predator
                         if(animal != null){
                             boolean ableToBreed = checkCompatibleGender(this, animal);
                             if(ableToBreed){
-                                giveBirth(nextFieldState, freeLocations);
+                                giveBirth(nextFieldState, freeLocations, weather);
                             }
                         }
                     }
@@ -107,9 +107,9 @@ public class Lion extends Predator
      * @param currentField The field currently occupied
      * @param nextFieldState The updated field.
      */
-    public void act(Field currentField, Field nextFieldState, String time){
+    public void act(Field currentField, Field nextFieldState, String time, String weather){
         incrementAge();
-        incrementHunger(); 
+        incrementHunger(weather); 
         if(isAlive()){
             if(time.equals("Night")){
                 List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(getLocation());
@@ -120,7 +120,7 @@ public class Lion extends Predator
                         if(animal != null){
                             boolean ableToBreed = checkCompatibleGender(this, animal);
                             if(ableToBreed){
-                                giveBirth(nextFieldState, freeLocations);
+                                giveBirth(nextFieldState, freeLocations, weather);
                             }
                         }
                     }
@@ -231,9 +231,42 @@ public class Lion extends Predator
         return MAX_LITTER_SIZE;
     }
     
+    /**
+     * Returns the maximum food value of the Lion
+     */
+    public int getMaxFoodValue()
+    {
+        return MAX_FOOD_VALUE;
+    }
+    
+    /**
+     * returns the food value of the given animal to be consumed. 
+     * The food value is the amount of hunger that will be replenished when this animal is consumed
+     */
+    protected int getFoodValue(Animal animal)
+    {
+        if (animal instanceof Zebra)
+        {
+            return ZEBRA_FOOD_VALUE;
+        }
+        else if (animal instanceof Wildebeest)
+        {
+            return WILDEBEEST_FOOD_VALUE;
+        }
+        return 0;
+    }
+    
     @Override
     protected Predator createYoung(Location loc)
     {
         return new Lion(false,loc);
+    }
+    
+    /**
+     * Check if the lion can eat a given animal. Lions can only eat Zebra and Wildebeest
+     */
+    protected boolean canEat(Animal animal)
+    {
+        return animal instanceof Zebra || animal instanceof Wildebeest;
     }
 }

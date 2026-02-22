@@ -18,15 +18,15 @@ public class Wildebeest extends Prey
 
     // Characteristics shared by all Wildebeests (Class variables).
     // The age at which a Wildebeest can start to breed.
-    private static final int BREEDING_AGE = 2;
+    private static final int BREEDING_AGE = 15;
     // the age to which a Wildebeest can live.
-    private static final int MAX_AGE = 2500000; //25
+    private static final int MAX_AGE = 250; //25
     // the likelihood of a Wildebeest breeding.
-    private static final double BREEDING_PROBABILITY = 0.00; //0.80
+    private static final double BREEDING_PROBABILITY = 0.10; //0.80
     // the maximum number of births.
     private static final int MAX_LITTER_SIZE = 1;
     // the max food level of a Wildebeest
-    private static final int MAX_FOOD_LEVEL = 7;  // might change this to be more similar to fox implementation
+    private static final int MAX_FOOD_VALUE = 40;  // might change this to be more similar to fox implementation
 
   
     /**
@@ -41,7 +41,9 @@ public class Wildebeest extends Prey
         super(randomAge, location);
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
+            foodLevel = MAX_FOOD_VALUE;
         }
+        foodLevel = rand.nextInt(MAX_FOOD_VALUE);
     }
 
     @Override
@@ -91,6 +93,15 @@ public class Wildebeest extends Prey
     protected Prey createYoung(Location loc)
     {
         return new Wildebeest(false,loc);
+    }
+    
+    /**
+     * Returns max food value of the wildebeest
+     */
+    @Override
+    public int getMaxFoodValue()
+    {
+        return MAX_FOOD_VALUE;
     }
 
 }

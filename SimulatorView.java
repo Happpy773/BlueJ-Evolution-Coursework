@@ -41,8 +41,8 @@ public class SimulatorView extends JFrame
     {
         stats = new FieldStats();
         colors = new LinkedHashMap<>();
-        setColor(Rabbit.class, Color.orange);
-        setColor(Fox.class, Color.blue);
+        //setColor(Rabbit.class, Color.orange);
+        //setColor(Fox.class, Color.blue);
         
         //new code
         setColor(Zebra.class, Color.green); //green 

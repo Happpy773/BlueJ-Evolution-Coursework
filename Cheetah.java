@@ -13,19 +13,19 @@ public class Cheetah extends Predator
 {
     // Characteristics shared by all Cheetahs (class variables).
     // The age at which a Cheetah can start to breed.
-    private static final int BREEDING_AGE = 15;
+    private static final int BREEDING_AGE = 20;
     // the age to which a Cheetah can live.
-    private static final int MAX_AGE = 1500000; //150
+    private static final int MAX_AGE = 150; //150
     // the likelihood of a Cheetah breeding.
-    private static final double BREEDING_PROBABILITY = 0.08;
+    private static final double BREEDING_PROBABILITY = 0.09;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 4;
+    private static final int MAX_LITTER_SIZE = 3;
     // The food value of a single gazelle.
-    private static final int GAZELLE_FOOD_VALUE = 9;
+    private static final int GAZELLE_FOOD_VALUE = 22;
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
     // maximum food level of a Cheetah
-    private static final int MAX_FOOD_VALUE = 70;
+    private static final int MAX_FOOD_VALUE = 50;
 
     /**
      * Create a Cheetah. A Cheetah can be created as a new born (age zero
@@ -54,9 +54,9 @@ public class Cheetah extends Predator
      * @param currentField The field currently occupied
      * @param nextFieldState The updated field.
      */
-    public void act(Field currentField, Field nextFieldState, String time){
+    public void act(Field currentField, Field nextFieldState, String time, String weather){
         incrementAge();
-        incrementHunger();
+        incrementHunger(weather);
         if(isAlive()){
             if(time.equals("Day")){
                 List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(getLocation());
@@ -67,7 +67,7 @@ public class Cheetah extends Predator
                         if(animal != null){
                             boolean ableToBreed = checkCompatibleGender(this, animal);
                             if(ableToBreed){
-                                giveBirth(nextFieldState, freeLocations);
+                                giveBirth(nextFieldState, freeLocations, weather);
                             }
                         }
                     }
@@ -166,9 +166,38 @@ public class Cheetah extends Predator
         return MAX_LITTER_SIZE;
     }
     
+    /**
+     * Returns the maximum food value of the Cheetah
+     */
+    public int getMaxFoodValue()
+    {
+        return MAX_FOOD_VALUE;
+    }
+    
     @Override
     protected Predator createYoung(Location loc)
     {
         return new Cheetah(false,loc);
+    }
+    
+    /**
+     * returns the food value of the given animal to be consumed. 
+     * The food value is the amount of hunger that will be replenished when this animal is consumed
+     */
+    protected int getFoodValue(Animal animal)
+    {
+        if (animal instanceof Gazelle)
+        {
+            return GAZELLE_FOOD_VALUE;
+        }
+        return 0;
+    }
+    
+    /**
+     * Check if the Cheetah can eat a given animal. Cheeeta can only eat Gazelle
+     */
+    protected boolean canEat(Animal animal)
+    {
+        return animal instanceof Gazelle;
     }
 }
