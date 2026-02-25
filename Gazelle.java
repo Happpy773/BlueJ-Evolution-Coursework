@@ -41,6 +41,11 @@ public class Gazelle extends Prey
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
             foodLevel = MAX_FOOD_VALUE;
+            randomHealthyOrNot();
+        }
+        // did harry mean to leave this part out
+        if(!randomAge){
+            setHealthy();
         }
     }
 

@@ -41,9 +41,14 @@ public class Wildebeest extends Prey
         super(randomAge, location);
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
-            foodLevel = MAX_FOOD_VALUE;
+            foodLevel = MAX_FOOD_VALUE; //i don't know if this makes sense bc
+            randomHealthyOrNot();
         }
-        foodLevel = rand.nextInt(MAX_FOOD_VALUE);
+        foodLevel = rand.nextInt(MAX_FOOD_VALUE); // this value just resets it to normal which
+        //makes the code inside of the if statement redundant - ask harry about this
+        if(!randomAge){
+            setHealthy();
+        }
     }
 
     @Override

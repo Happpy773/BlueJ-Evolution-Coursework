@@ -42,8 +42,13 @@ public class Zebra extends Prey
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
             foodLevel = MAX_FOOD_VALUE;
+            randomHealthyOrNot();
         }
         foodLevel = rand.nextInt(MAX_FOOD_VALUE);
+        
+        if(!randomAge){
+            setHealthy();
+        }
     }
 
 

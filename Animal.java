@@ -25,6 +25,10 @@ public abstract class Animal
     protected String gender;
     // a shared random number generator to control breeding.
     protected static final Random rand = Randomizer.getRandom();
+    // the animal's health status
+    private Health health;
+    
+    
 
     /**
      * Constructor for objects of class Animal.
@@ -34,6 +38,59 @@ public abstract class Animal
     {
         this.alive = true;
         this.location = location;
+    }
+    
+    /**
+     * Random chance that the animal's health is assigned to disease
+     * To be called when an animal in an adjacent field has a disease
+     */
+    public void chanceOfDisease(){
+        Random rand = new Random();
+        int numberGenerated = rand.nextInt(10);
+        if(numberGenerated == 8 || numberGenerated == 9){
+            setDisease();
+        }
+    }
+    
+    /**
+     * Random chance that the animal dies if it has a disease
+     * To be called each step
+     */
+    public String randomChanceItDies(){
+        Random rand = new Random();
+        int numberGenerated = rand.nextInt(5);
+        if(numberGenerated == 4 || numberGenerated == 5){
+            return "Dead";
+        }
+        return "Alive";
+    }
+    
+    /**
+     * Randomly decides whether an animal is healthy or not
+     */
+    public void randomHealthyOrNot(){
+        Random rand = new Random();
+        int numberGenerated = rand.nextInt(30);
+        if(numberGenerated == 29){
+            setDisease();
+        }
+        else{
+            setHealthy();
+        }
+    }
+    
+    /**
+     * Sets the animal's health status to healthy
+     */
+    public void setHealthy(){
+        health = Health.HEALTHY;
+    }
+    
+    /**
+     * Sets the animal's health status to disease
+     */
+    public void setDisease(){
+        health = Health.DISEASE;
     }
     
     /**
@@ -73,6 +130,14 @@ public abstract class Animal
      */
     protected abstract Animal createYoung(Location loc);
     
+    
+    /**
+     * Returns whether the animal is healthy or has disease
+     * @return health
+     */
+    public Health getHealth(){
+        return health;
+    }
     
     /**
      * Check whether the animal is alive or not.
@@ -126,13 +191,13 @@ public abstract class Animal
      * Make this animal more hungry. In a heatwave, hunger decreases twice as fast. This could result in the animal's death
      */
     protected void incrementHunger(String weather) {
-        int hungerDrain = 1; // Base rate (sunny)
+        int hungerDrain = 1; // Base rate (sunny/rainy)
         if(weather.equals("Heatwave"))
         {
             hungerDrain = 2; // hunger doubles
         }
         foodLevel -= hungerDrain;
-        
+        // could potentially add more weather's here like thunderstorm 
         if(foodLevel <= 0) {
             setDead();
         }

@@ -1,6 +1,7 @@
 import java.util.List;
 import java.util.Iterator;
 import java.util.Random;
+import java.util.ArrayList;
 
 /**
  * A simple model of a Hyena
@@ -41,10 +42,12 @@ public class Hyena extends Predator
         super(randomAge, location);
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
+            randomHealthyOrNot();
         }
         else {
             age = 0;
             foodLevel = MAX_FOOD_VALUE;
+            setHealthy();
         }
         foodLevel = rand.nextInt(MAX_FOOD_VALUE);
     }
@@ -60,6 +63,15 @@ public class Hyena extends Predator
         incrementAge();
         incrementHunger(weather);
         if(isAlive()){
+            //check that if has disease, then there is a random chance it dies
+            if(this.getHealth() == Health.DISEASE){
+                String aliveOrNot = randomChanceItDies();
+                if(aliveOrNot.equals("Dead")){
+                    setDead();
+                    return;
+                }
+            }
+
             List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(getLocation());
             if(! freeLocations.isEmpty()) {
                 if(this.getGender().equals("Female")){
@@ -74,6 +86,20 @@ public class Hyena extends Predator
                 }
 
             }
+
+            // check for animal in adjacent list have disease
+            ArrayList<Animal> animals = checkAnimalAdjacentLocationList(currentField, nextFieldState);
+            if(animals.size() == 0){
+                // do nothing 
+            }
+            else{
+                for(Animal animal: animals){
+                    if(animal.getHealth() == Health.DISEASE){
+                        chanceOfDisease();
+                    }
+                }
+            }
+
             // Move towards a source of food if found.
             Location nextLocation = findFood(currentField);
             if(nextLocation == null && ! freeLocations.isEmpty()){
@@ -90,6 +116,26 @@ public class Hyena extends Predator
                 setDead();
             }
         }
+    }
+
+    /**
+     * This will check the animal's adjacent locations and check whether there is another one
+     * of its species. It will return a list of the animals of its same type.
+     * @return The list of animals found or null if no animal found.
+     */
+    protected ArrayList checkAnimalAdjacentLocationList(Field currentField, Field nextFieldState){
+        List<Location> adjacentLocations = nextFieldState.getAdjacentLocations(getLocation());
+        ArrayList<Animal> animals = new ArrayList<>();
+        for(Location location: adjacentLocations){
+            Animal animal = currentField.getAnimalAt(location);
+            if(animal == null){
+                //do nothing
+            }
+            else if(animal.getClass().equals(this.getClass())){
+                animals.add(animal);
+            }
+        }
+        return animals;
     }
 
     @Override
@@ -147,7 +193,7 @@ public class Hyena extends Predator
         }
         return foodLocation;
     }
-    
+
     /**
      * Returns breeding age of the Hyena
      */
@@ -155,7 +201,7 @@ public class Hyena extends Predator
     {
         return BREEDING_PROBABILITY;
     }
-    
+
     /**
      * Returns breeding age of the Hyena
      */
@@ -163,7 +209,7 @@ public class Hyena extends Predator
     {
         return BREEDING_AGE;
     }
-    
+
     /**
      * Returns the maximum litter size of the Hyena
      */
@@ -171,7 +217,7 @@ public class Hyena extends Predator
     {
         return MAX_LITTER_SIZE;
     }
-    
+
     /**
      * Returns the maximum food value of the Hyena
      */
@@ -179,7 +225,7 @@ public class Hyena extends Predator
     {
         return MAX_FOOD_VALUE;
     }
-    
+
     /**
      * returns the food value of the given animal to be consumed. 
      * The food value is the amount of hunger that will be replenished when this animal is consumed
@@ -196,13 +242,13 @@ public class Hyena extends Predator
         }
         return 0;
     }
-    
+
     @Override
     protected Predator createYoung(Location loc)
     {
         return new Hyena(false,loc);
     }
-    
+
     /**
      * Check if the hyena can eat a given animal. Hyena can only eat Zebra and Wildebeest
      */

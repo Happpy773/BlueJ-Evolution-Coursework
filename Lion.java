@@ -1,6 +1,7 @@
 import java.util.List;
 import java.util.Iterator;
 import java.util.Random;
+import java.util.ArrayList;
 
 /**
  * A simple model of a lion
@@ -42,10 +43,12 @@ public class Lion extends Predator
         super(randomAge, location);
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
+            randomHealthyOrNot();
         }
         else {
             age = 0;
             foodLevel = MAX_FOOD_VALUE;
+            setHealthy();
         }
         foodLevel = rand.nextInt(MAX_FOOD_VALUE);
     } 
@@ -111,6 +114,16 @@ public class Lion extends Predator
         incrementAge();
         incrementHunger(weather); 
         if(isAlive()){
+            //check that if has disease, then there is a random chance it dies
+            if(this.getHealth() == Health.DISEASE){
+                String aliveOrNot = randomChanceItDies();
+                if(aliveOrNot.equals("Dead")){
+                    setDead();
+                    return;
+                }
+            }
+            
+            
             if(time.equals("Night")){
                 List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(getLocation());
                 if(! freeLocations.isEmpty()) {
@@ -126,6 +139,20 @@ public class Lion extends Predator
                     }
 
                 }
+                
+                // check for animal in adjacent list have disease
+                ArrayList<Animal> animals = checkAnimalAdjacentLocationList(currentField, nextFieldState);
+                if(animals.size() == 0){
+                    // do nothing 
+                }
+                else{
+                    for(Animal animal: animals){
+                        if(animal.getHealth() == Health.DISEASE){
+                            chanceOfDisease();
+                        }
+                    }
+                }
+                
                 // Move towards a source of food if found.
                 Location nextLocation = findFood(currentField);
                 if(nextLocation == null && ! freeLocations.isEmpty()){
@@ -148,6 +175,26 @@ public class Lion extends Predator
             }
 
         }
+    }
+    
+    /**
+     * This will check the animal's adjacent locations and check whether there is another one
+     * of its species. It will return a list of the animals of its same type.
+     * @return The list of animals found or null if no animal found.
+     */
+    protected ArrayList checkAnimalAdjacentLocationList(Field currentField, Field nextFieldState){
+        List<Location> adjacentLocations = nextFieldState.getAdjacentLocations(getLocation());
+        ArrayList<Animal> animals = new ArrayList<>();
+        for(Location location: adjacentLocations){
+            Animal animal = currentField.getAnimalAt(location);
+            if(animal == null){
+                //do nothing
+            }
+            else if(animal.getClass().equals(this.getClass())){
+                animals.add(animal);
+            }
+        }
+        return animals;
     }
 
     @Override

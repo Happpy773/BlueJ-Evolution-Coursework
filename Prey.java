@@ -1,5 +1,6 @@
 import java.util.Random;
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Write a description of class Prey here.
@@ -33,12 +34,20 @@ public abstract class Prey extends Animal
         incrementAge();
         incrementHunger(weather);
         if(isAlive()){
+            //check that if has disease, then there is a random chance it dies
+            if(this.getHealth() == Health.DISEASE){
+                String aliveOrNot = randomChanceItDies();
+                if(aliveOrNot.equals("Dead")){
+                    setDead();
+                    return;
+                }
+            }
+            
+            
             if(time.equals("Day")){
                 findGrass(currentField);
                 List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(getLocation());
 
-                // if there is a grass in an adjacent location, eat it (if not at max food level)
-                //if(foodLevel < MAX_FOOD_LEVEL &&                  ADD THIS METHOD LATER!!!!
 
                 if(!freeLocations.isEmpty()){
                     if(this.getGender().equals("Female")){
@@ -53,6 +62,20 @@ public abstract class Prey extends Animal
                     }
 
                 }
+                
+                // check for animal in adjacent list have disease
+                ArrayList<Animal> animals = checkAnimalAdjacentLocationList(currentField, nextFieldState);
+                if(animals.size() == 0){
+                    // do nothing 
+                }
+                else{
+                    for(Animal animal: animals){
+                        if(animal.getHealth() == Health.DISEASE){
+                            chanceOfDisease();
+                        }
+                    }
+                }
+                
                 // Try to move into a free location.
                 if(! freeLocations.isEmpty()){
                     Location nextLocation = freeLocations.get(0);
@@ -146,5 +169,24 @@ public abstract class Prey extends Animal
         //if reaches here it means that no corresponding animal was found
         return null;
     }
-     
+    
+    /**
+     * This will check the animal's adjacent locations and check whether there is another one
+     * of its species. It will return a list of the animals of its same type.
+     * @return The list of animals found or null if no animal found.
+     */
+    protected ArrayList checkAnimalAdjacentLocationList(Field currentField, Field nextFieldState){
+        List<Location> adjacentLocations = nextFieldState.getAdjacentLocations(getLocation());
+        ArrayList<Animal> animals = new ArrayList<>();
+        for(Location location: adjacentLocations){
+            Animal animal = currentField.getAnimalAt(location);
+            if(animal == null){
+                //do nothing
+            }
+            else if(animal.getClass().equals(this.getClass())){
+                animals.add(animal);
+            }
+        }
+        return animals;
+    }
 }
