@@ -10,23 +10,17 @@ import java.util.Random;
  */
 public class Zebra extends Prey
 {
-    // TO WORK ON:
-    // BREEDING WITH MALE AND FEMALE
-    // IMPLEMENT EATING PLANTS
-    // EVERY ACT() DECREASE FOOD LEVEL
-    //IMPLEMENT BEHAVIOUR WHEN DAY NIGHT CYCLE
-
     // Characteristics shared by all zebras (Class variables).
     // The age at which a zebra can start to breed.
     private static final int BREEDING_AGE = 10;
     // the age to which a zebra can live.
-    private static final int MAX_AGE = 200; //40
+    private static final int MAX_AGE = 200; 
     // the likelihood of a zebra breeding.
-    private static final double BREEDING_PROBABILITY = 0.12; //0.80
+    private static final double BREEDING_PROBABILITY = 0.12; 
     // the maximum number of births.
     private static final int MAX_LITTER_SIZE = 1;
     // the max food level of a zebra
-    private static final int MAX_FOOD_VALUE = 30;  // might change this to be more similar to fox implementation
+    private static final int MAX_FOOD_VALUE = 30; 
     
 
     /**
@@ -41,14 +35,15 @@ public class Zebra extends Prey
         super(randomAge, location);
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
-            foodLevel = MAX_FOOD_VALUE;
+            foodLevel = rand.nextInt(MAX_FOOD_VALUE) + 1;
             randomHealthyOrNot();
         }
-        foodLevel = rand.nextInt(MAX_FOOD_VALUE);
-        
-        if(!randomAge){
+        else{
+            age = 0;
+            foodLevel = MAX_FOOD_VALUE;
             setHealthy();
         }
+        
     }
 
 
@@ -64,7 +59,7 @@ public class Zebra extends Prey
     }
 
     /**
-     * Returns the maximum age of the zebra
+     * @return the maximum age of the zebra
      */
     @Override
     public int getMaxAge()
@@ -73,7 +68,7 @@ public class Zebra extends Prey
     }
 
     /**
-     * Returns breeding age of the zebra
+     * @return breeding age of the zebra
      */
     @Override
     public int getBreedingAge()
@@ -82,7 +77,7 @@ public class Zebra extends Prey
     }
     
     /**
-     * Returns breeding age of the zebra
+     * @return breeding probability of the zebra
      */
     @Override
     public double getBreedingProbability()
@@ -91,7 +86,7 @@ public class Zebra extends Prey
     }
     
     /**
-     * Returns the maximum litter size of the zebra
+     * @return the maximum litter size of the zebra
      */
     @Override
     public int getMaxLitterSize()
@@ -106,7 +101,7 @@ public class Zebra extends Prey
     }
     
     /**
-     * Returns max food value of the zebra
+     * @return max food value of the zebra
      */
     @Override
     public int getMaxFoodValue()

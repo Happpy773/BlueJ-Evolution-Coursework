@@ -18,30 +18,19 @@ public class Simulator
     private static final int DEFAULT_WIDTH = 120;
     // The default depth of the grid.
     private static final int DEFAULT_DEPTH = 80;
-    // The probability that a fox will be created in any given grid position.
-    private static final double FOX_CREATION_PROBABILITY = 0.00; //was 0.02
-    // The probability that a rabbit will be created in any given position.
-    private static final double RABBIT_CREATION_PROBABILITY = 0.00; //was 0.08
 
     // The probability that a cheetah will be created in any given position.
-    private static final double CHEETAH_CREATION_PROBABILITY = 0.01; // 0.02
+    private static final double CHEETAH_CREATION_PROBABILITY = 0.01; 
     // The probability that a lion will be created in any given position.
-    private static final double LION_CREATION_PROBABILITY = 0.005; //0.05
+    private static final double LION_CREATION_PROBABILITY = 0.005; 
     // The probability that a hyena will be created in any given position.
-    private static final double HYENA_CREATION_PROBABILITY = 0.01; //0.06
+    private static final double HYENA_CREATION_PROBABILITY = 0.01; 
     // The probability that a zebra will be created in any given position.
-    private static final double ZEBRA_CREATION_PROBABILITY = 0.15; //0.15
+    private static final double ZEBRA_CREATION_PROBABILITY = 0.15; 
     // The probability that a wildebeest will be created in any given position.
-    private static final double WILDEBEEST_CREATION_PROBABILITY = 0.17; //0.17
+    private static final double WILDEBEEST_CREATION_PROBABILITY = 0.17; 
     // The probability that a gazelle will be created in any given position.
-    private static final double GAZELLE_CREATION_PROBABILITY = 0.21; //0.21
-    
-    // placeholder for now
-    private static final double RAINY = 0.00;
-    // placeholder for now
-    private static final double THUNDERSTORM = 0.00;
-    // placeholder for now
-    private static final double DROUGHT = 0.00;
+    private static final double GAZELLE_CREATION_PROBABILITY = 0.21; 
     
 
     // The current state of the field.
@@ -61,7 +50,7 @@ public class Simulator
     public Simulator()
     {
         this(DEFAULT_DEPTH, DEFAULT_WIDTH);
-        // new code
+
         time = "Day";
         weather = "Sunny";
     }
@@ -71,12 +60,8 @@ public class Simulator
      */
     public void chooseWeather(){
         Random rand = new Random();
-        int randomNumber = rand.nextInt(10); //will return numbers from 0-9
-        // 4 different types (may change after): sunny, rainy, thunderstorm, heatwave
-        // drought will be value 9
-        // thunderstorm will be value 8
-        // rainy will be values 4-7
-        // sunny will be values 0-3
+        int randomNumber = rand.nextInt(10); 
+        // 4 different types: sunny, rainy, thunderstorm, heatwave
         // heatwave increases the rate of hunger decrease
         // thunderstorm decreases the breeding rate of animals
         // rainy increases the growth rate of plants
@@ -127,6 +112,9 @@ public class Simulator
         
         field = new Field(depth, width);
         view = new SimulatorView(depth, width);
+        
+        time = "Day";
+        weather = "Sunny";
 
         reset();
     }
@@ -156,13 +144,12 @@ public class Simulator
     
     /**
      * Run the simulation from its current state for a single step.
-     * Iterate over the whole field updating the state of each fox and rabbit.
+     * Iterate over the whole field updating the state of each animal.
      */
     public void simulateOneStep()
     {
         step++;
         
-        //new code
         if(step%2==0){
             time = "Day";
         }
@@ -201,7 +188,7 @@ public class Simulator
     }
     
     /**
-     * Randomly populate the field with foxes and rabbits.
+     * Randomly populate the field with animals.
      */
     private void populate()
     {
@@ -209,17 +196,7 @@ public class Simulator
         field.clear();
         for(int row = 0; row < field.getDepth(); row++) {
             for(int col = 0; col < field.getWidth(); col++) {
-                // if(rand.nextDouble() <= FOX_CREATION_PROBABILITY) {
-                    // Location location = new Location(row, col);
-                    // Fox fox = new Fox(true, location);
-                    // field.placeAnimal(fox, location);
-                // }
-                // else if(rand.nextDouble() <= RABBIT_CREATION_PROBABILITY) {
-                    // Location location = new Location(row, col);
-                    // Rabbit rabbit = new Rabbit(true, location);
-                    // field.placeAnimal(rabbit, location);
-                // }
-                
+
                 if(rand.nextDouble() <= CHEETAH_CREATION_PROBABILITY){
                     Location location = new Location(row, col);
                     Cheetah cheetah = new Cheetah(true, location);

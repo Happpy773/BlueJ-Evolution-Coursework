@@ -16,7 +16,7 @@ public class Cheetah extends Predator
     // The age at which a Cheetah can start to breed.
     private static final int BREEDING_AGE = 20;
     // the age to which a Cheetah can live.
-    private static final int MAX_AGE = 150; //150
+    private static final int MAX_AGE = 150; 
     // the likelihood of a Cheetah breeding.
     private static final double BREEDING_PROBABILITY = 0.09;
     // The maximum number of births.
@@ -40,6 +40,7 @@ public class Cheetah extends Predator
         super(randomAge, location);
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
+            foodLevel = rand.nextInt(MAX_FOOD_VALUE) + 1;
             randomHealthyOrNot();
         }
         else {
@@ -47,7 +48,7 @@ public class Cheetah extends Predator
             foodLevel = MAX_FOOD_VALUE;
             setHealthy();
         }
-        foodLevel = rand.nextInt(MAX_FOOD_VALUE);
+        
     }
 
     /**
@@ -56,6 +57,8 @@ public class Cheetah extends Predator
      * die of old age.
      * @param currentField The field currently occupied
      * @param nextFieldState The updated field.
+     * @param time The current time of day
+     * @param weather The weather that it currently is
      */
     public void act(Field currentField, Field nextFieldState, String time, String weather){
         incrementAge();
@@ -70,8 +73,10 @@ public class Cheetah extends Predator
                     return;
                 }
             }
-
+            
+            //act during the day
             if(time.equals("Day")){
+                // give birth sequence
                 List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(getLocation());
                 if(! freeLocations.isEmpty()) {
                     if(this.getGender().equals("Female")){
@@ -117,6 +122,7 @@ public class Cheetah extends Predator
                 }
             }
             else{
+                //stay exactly where it is
                 Location nextLocation = getLocation();
                 nextFieldState.placeAnimal(this, nextLocation);
             }
@@ -127,6 +133,8 @@ public class Cheetah extends Predator
     /**
      * This will check the animal's adjacent locations and check whether there is another one
      * of its species. It will return a list of the animals of its same type.
+     * @param currentField the current field state
+     * @param nextFieldState the state of the next field
      * @return The list of animals found or null if no animal found.
      */
     protected ArrayList checkAnimalAdjacentLocationList(Field currentField, Field nextFieldState){
@@ -156,7 +164,7 @@ public class Cheetah extends Predator
     }
 
     /**
-     * Returns the maximum age
+     * @return the maximum age
      */
     public int getMaxAge()
     {
@@ -180,7 +188,6 @@ public class Cheetah extends Predator
                 if(gazelle.isAlive()){
                     gazelle.setDead();
                     foodLevel = GAZELLE_FOOD_VALUE;
-                    // do i need to increment the food value here??
                     foodLocation = loc;
                 }
             }
@@ -190,7 +197,7 @@ public class Cheetah extends Predator
     }
 
     /**
-     * Returns breeding age of the Hyena
+     * @return breeding probability of the Hyena
      */
     public double getBreedingProbability()
     {
@@ -198,7 +205,7 @@ public class Cheetah extends Predator
     }
 
     /**
-     * Returns breeding age of the Hyena
+     * @return breeding age of the Hyena
      */
     public int getBreedingAge()
     {
@@ -206,7 +213,7 @@ public class Cheetah extends Predator
     }
 
     /**
-     * Returns the maximum litter size of the Hyena
+     * @return the maximum litter size of the Hyena
      */
     public int getMaxLitterSize()
     {
@@ -214,7 +221,7 @@ public class Cheetah extends Predator
     }
 
     /**
-     * Returns the maximum food value of the Cheetah
+     * @return the maximum food value of the Cheetah
      */
     public int getMaxFoodValue()
     {
@@ -228,7 +235,7 @@ public class Cheetah extends Predator
     }
 
     /**
-     * returns the food value of the given animal to be consumed. 
+     * @return the food value of the given animal to be consumed. 
      * The food value is the amount of hunger that will be replenished when this animal is consumed
      */
     protected int getFoodValue(Animal animal)
@@ -241,7 +248,7 @@ public class Cheetah extends Predator
     }
 
     /**
-     * Check if the Cheetah can eat a given animal. Cheeeta can only eat Gazelle
+     * Check if the Cheetah can eat a given animal. Cheetahs can only eat Gazelle
      */
     protected boolean canEat(Animal animal)
     {

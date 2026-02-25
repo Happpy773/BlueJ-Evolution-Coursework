@@ -3,10 +3,10 @@ import java.util.List;
 import java.util.Iterator;
 
 /**
- * Write a description of class Predator here.
+ * Comprises of the methods and behaviours that all predators share
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Diego Abete and Harrison Buck
+ * @version 1.0
  */
 public abstract class Predator extends Animal
 {
@@ -46,10 +46,19 @@ public abstract class Predator extends Animal
      */
     protected abstract Animal createYoung(Location loc);
     
+    /**
+     * abstract method to call the getFoodValue() method
+     */
     protected abstract int getFoodValue(Animal animal);
     
+    /**
+     * abstract method to call the getMaxFoodValue() method
+     */
     protected abstract int getMaxFoodValue();
     
+    /**
+     * abstract method to call the canEat() method
+     */
     protected abstract boolean canEat(Animal animal);
     
     /**
@@ -62,6 +71,8 @@ public abstract class Predator extends Animal
     /**
      * This will check the animal's adjacent locations and check whether there is another one 
      * of its species. If there is, it will return the first one it finds.
+     * @param currentField the current field state
+     * @param nextFieldState the state of the next field
      * @return The animal found or null if no animal found
      */
     protected Animal checkAnimalAdjacentLocation(Field currentField, Field nextFieldState){
@@ -80,7 +91,7 @@ public abstract class Predator extends Animal
     }
     
     /**
-     * Look for gazelles adjacent to the current location
+     * Look for prey adjacent to the current location
      * Only the first live prey is eaten.
      * @param field The field is currently occupied
      * @return Where the food was found, or null if it wasn't

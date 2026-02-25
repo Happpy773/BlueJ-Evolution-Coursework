@@ -10,23 +10,17 @@ import java.util.Random;
  */
 public class Wildebeest extends Prey
 {
-    // TO WORK ON:
-    // BREEDING WITH MALE AND FEMALE
-    // IMPLEMENT EATING PLANTS
-    // EVERY ACT() DECREASE FOOD LEVEL
-    //IMPLEMENT BEHAVIOUR WHEN DAY NIGHT CYCLE
-
     // Characteristics shared by all Wildebeests (Class variables).
     // The age at which a Wildebeest can start to breed.
     private static final int BREEDING_AGE = 15;
     // the age to which a Wildebeest can live.
-    private static final int MAX_AGE = 250; //25
+    private static final int MAX_AGE = 250; 
     // the likelihood of a Wildebeest breeding.
-    private static final double BREEDING_PROBABILITY = 0.10; //0.80
+    private static final double BREEDING_PROBABILITY = 0.10; 
     // the maximum number of births.
     private static final int MAX_LITTER_SIZE = 1;
     // the max food level of a Wildebeest
-    private static final int MAX_FOOD_VALUE = 40;  // might change this to be more similar to fox implementation
+    private static final int MAX_FOOD_VALUE = 40;
 
   
     /**
@@ -40,15 +34,17 @@ public class Wildebeest extends Prey
     {
         super(randomAge, location);
         if(randomAge) {
-            age = rand.nextInt(MAX_AGE);
-            foodLevel = MAX_FOOD_VALUE; //i don't know if this makes sense bc
+            age = rand.nextInt(MAX_AGE); 
+            foodLevel = rand.nextInt(MAX_FOOD_VALUE) + 1;
             randomHealthyOrNot();
         }
-        foodLevel = rand.nextInt(MAX_FOOD_VALUE); // this value just resets it to normal which
-        //makes the code inside of the if statement redundant - ask harry about this
-        if(!randomAge){
+        else{
+            age = 0;
+            foodLevel = MAX_FOOD_VALUE;
             setHealthy();
         }
+        
+        
     }
 
     @Override
@@ -63,7 +59,7 @@ public class Wildebeest extends Prey
     }
 
     /**
-     * Returns the maximum age of the wildebeest
+     * @return the maximum age of the wildebeest
      */
     public int getMaxAge()
     {
@@ -71,7 +67,7 @@ public class Wildebeest extends Prey
     }
     
     /**
-     * Returns breeding age of the wildebeest
+     * @return breeding probability of the wildebeest
      */
     public double getBreedingProbability()
     {
@@ -79,7 +75,7 @@ public class Wildebeest extends Prey
     }
     
     /**
-     * Returns breeding age of the wildebeest
+     * @return breeding age of the wildebeest
      */
     public int getBreedingAge()
     {
@@ -87,7 +83,7 @@ public class Wildebeest extends Prey
     }
     
     /**
-     * Returns the maximum litter size of the wildebeest
+     * @return the maximum litter size of the wildebeest
      */
     public int getMaxLitterSize()
     {
@@ -101,7 +97,7 @@ public class Wildebeest extends Prey
     }
     
     /**
-     * Returns max food value of the wildebeest
+     * @return max food value of the wildebeest
      */
     @Override
     public int getMaxFoodValue()

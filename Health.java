@@ -1,9 +1,9 @@
 
 /**
- * Enumeration class Health - write a description of the enum class here
+ * Enumeration class Health - has two states, HEALTHY or DISEASE
  *
- * @author (your name here)
- * @version (version number or date here)
+ * @author Diego Abete and Harrison Buck
+ * @version 1.0
  */
 public enum Health
 {

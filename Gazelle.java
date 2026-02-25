@@ -10,22 +10,17 @@ import java.util.Random;
  */
 public class Gazelle extends Prey
 {
-    // TO WORK ON:
-    // 
-    // IMPLEMENT EATING PLANTS
-    // EVERY ACT() DECREASE FOOD LEVEL
-
     // Characteristics shared by all Gazelles (Class variables).
     // The age at which a Gazelle can start to breed.
     private static final int BREEDING_AGE = 5;
     // the age to which a Gazelle can live.
-    private static final int MAX_AGE = 150; //15
+    private static final int MAX_AGE = 150;
     // the likelihood of a Gazelle breeding.
-    private static final double BREEDING_PROBABILITY = 0.15; //0.65
+    private static final double BREEDING_PROBABILITY = 0.15; 
     // the maximum number of births.
     private static final int MAX_LITTER_SIZE = 2;
     // the max food level of a Gazelle
-    private static final int MAX_FOOD_VALUE = 20;  // might change this to be more similar to fox implementation
+    private static final int MAX_FOOD_VALUE = 20;
 
 
     /**
@@ -40,13 +35,15 @@ public class Gazelle extends Prey
         super(randomAge, location);
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
-            foodLevel = MAX_FOOD_VALUE;
+            foodLevel = rand.nextInt(MAX_FOOD_VALUE) + 1;
             randomHealthyOrNot();
         }
-        // did harry mean to leave this part out
-        if(!randomAge){
+        else{
+            age = 0;
+            foodLevel = MAX_FOOD_VALUE;
             setHealthy();
         }
+        
     }
 
     @Override
@@ -61,7 +58,7 @@ public class Gazelle extends Prey
     }
 
     /**
-     * Returns the maximum age
+     * @return the maximum age
      */
     public int getMaxAge()
     {
@@ -69,7 +66,7 @@ public class Gazelle extends Prey
     }
     
     /**
-     * Returns breeding age of the gazelle
+     * @return breeding probability of the gazelle
      */
     public double getBreedingProbability()
     {
@@ -77,7 +74,7 @@ public class Gazelle extends Prey
     }
     
     /**
-     * Returns breeding age of the gazelle
+     * @return breeding age of the gazelle
      */
     public int getBreedingAge()
     {
@@ -85,7 +82,7 @@ public class Gazelle extends Prey
     }
     
     /**
-     * Returns the maximum litter size of the gazelle
+     * @return the maximum litter size of the gazelle
      */
     public int getMaxLitterSize()
     {
@@ -99,7 +96,7 @@ public class Gazelle extends Prey
     }
     
     /**
-     * Returns max food value of the gazelle
+     * @return max food value of the gazelle
      */
     @Override
     public int getMaxFoodValue()

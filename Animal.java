@@ -2,7 +2,7 @@ import java.util.Random;
 import java.util.List;
 
 /**
- * Common elements of foxes and rabbits.
+ * Common elements of animals
  *
  * @author David J. Barnes and Michael Kölling
  * @version 7.0
@@ -55,6 +55,7 @@ public abstract class Animal
     /**
      * Random chance that the animal dies if it has a disease
      * To be called each step
+     * @return "Dead" if the animal dies or "Alive" if the animal keeps living
      */
     public String randomChanceItDies(){
         Random rand = new Random();
@@ -112,16 +113,19 @@ public abstract class Animal
     
     /**
      * abstract method to call the child class getBreedingAge() method
+     * @return breeding age
      */
     public abstract int getBreedingAge();
     
     /**
      * abstract method to call the child class getBreedingProbability() method
+     * @return breeding probability
      */
     public abstract double getBreedingProbability();
     
     /**
      * abstract method to call the child class getMaxLitterSize() method
+     * @return max litter size
      */
     public abstract int getMaxLitterSize();
     
@@ -189,6 +193,7 @@ public abstract class Animal
     
     /**
      * Make this animal more hungry. In a heatwave, hunger decreases twice as fast. This could result in the animal's death
+     * @param weather The weather that it currently is
      */
     protected void incrementHunger(String weather) {
         int hungerDrain = 1; // Base rate (sunny/rainy)
@@ -205,6 +210,7 @@ public abstract class Animal
     
     /**
      * A predator can breed if it has reached the breeding age.
+     * @return whether the animal's age is bigger or equal to the breeding age
      */
     private boolean canBreed() {
         return age >= getBreedingAge();
@@ -213,6 +219,7 @@ public abstract class Animal
     /**
      * Generate a number representing the number of births,
      * if it can breed. If it is a thunderstorm, the chances of breeding are halved
+     * @param weather The weather that it currently is
      * @return The number of births (may be zero)
      */
     protected int breed(String weather){
@@ -237,6 +244,8 @@ public abstract class Animal
      * Check whether or not this animal is to give birth at this step
      * New births will be made into free adjacent locations
      * @param freeLocations the locations that are free in the current field.
+     * @param nextFieldState the next field state
+     * @param weather The weather that it currently is
      */
     protected void giveBirth(Field nextFieldState, List<Location> freeLocations, String weather) {
         // New animals are born into adjacent locations
@@ -266,8 +275,8 @@ public abstract class Animal
     } 
     
     /**
-     * Chooses the gender of the predator randomly
-     * @return gender of the lion
+     * Chooses the gender of the animal randomly
+     * @return gender of the animal
      */
     protected String chooseGender(){
         Random zeroOrOne = new Random();

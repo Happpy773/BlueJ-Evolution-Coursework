@@ -3,10 +3,10 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- * Write a description of class Prey here.
+ * Comprises of the methods and behaviours all prey share
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Diego Abete and Harrison Buck
+ * @version 1.0
  */
 public abstract class Prey extends Animal
 {
@@ -43,12 +43,12 @@ public abstract class Prey extends Animal
                 }
             }
             
-            
+            // act during the day
             if(time.equals("Day")){
                 findGrass(currentField);
                 List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(getLocation());
 
-
+                // give birth sequence
                 if(!freeLocations.isEmpty()){
                     if(this.getGender().equals("Female")){
                         //check if in adjacent fields there are other zebras
@@ -88,9 +88,7 @@ public abstract class Prey extends Animal
                 }
             }
             else{
-                // we want nextLocation to be the same location the animal is already in 
-                //is there a way to extract the location from the currentField?
-                // there is a getLocation() method but idk where it is from
+                // Stay in the exact same place
                 Location nextLocation = getLocation();
                 nextFieldState.placeAnimal(this, nextLocation);
             }
@@ -98,6 +96,10 @@ public abstract class Prey extends Animal
         }
     }
     
+    /**
+     * finds the grass level at the animal's current location, if it over 3, it will eat the grass
+     * The grass level is then added to the animal's food level
+     */
     private void findGrass(Field field)
     {
         Location loc = getLocation();
@@ -153,6 +155,8 @@ public abstract class Prey extends Animal
     /**
      * This will check the animal's adjacent locations and check whether there is another one 
      * of its species. If there is, it will return the first one it finds.
+     * @param currentField the current field state
+     * @param nextFieldState the state of the next field
      * @return The animal found or null if no animal found
      */
     protected Animal checkAnimalAdjacentLocation(Field currentField, Field nextFieldState){
@@ -173,6 +177,8 @@ public abstract class Prey extends Animal
     /**
      * This will check the animal's adjacent locations and check whether there is another one
      * of its species. It will return a list of the animals of its same type.
+     * @param currentField the current field state
+     * @param nextFieldState the state of the next field
      * @return The list of animals found or null if no animal found.
      */
     protected ArrayList checkAnimalAdjacentLocationList(Field currentField, Field nextFieldState){

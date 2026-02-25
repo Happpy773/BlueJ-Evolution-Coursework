@@ -6,6 +6,10 @@ import java.util.*;
  * 
  * @author David J. Barnes and Michael Kölling
  * @version 7.0
+ * 
+ * Extended by 
+ * @author Diego Abete and Harrison Buck
+ * @version 1.0
  */
 public class Field
 {
@@ -20,7 +24,7 @@ public class Field
     private final List<Animal> animals = new ArrayList<>();
     // A map of the grass 
     private static int[][] grassMap;
-    // The maximum leve grass can grow to    
+    // The maximum level grass can grow to    
     private final int MAX_GRASS_LEVEL = 5;
     
     
@@ -124,7 +128,9 @@ public class Field
     }
 
     /**
-     * Print out the number of foxes and rabbits in the field.
+     * Print out the number of different animals in the field.
+     * @param time The time of day that it currently is
+     * @param weather The weather that it currently is
      */
     public void fieldStats(String time, String weather)
     {
@@ -132,16 +138,7 @@ public class Field
         int numZebras = 0, numWildebeests = 0, numGazelles = 0;
         int numCheetahs = 0, numLions = 0, numHyenas = 0;
         for(Animal anAnimal : field.values()) {
-            // if(anAnimal instanceof Fox fox) {
-                // if(fox.isAlive()) {
-                    // numFoxes++;
-                // }
-            // }
-            // else if(anAnimal instanceof Rabbit rabbit) {
-                // if(rabbit.isAlive()) {
-                    // numRabbits++;
-                // }
-            // }
+            
             if(anAnimal instanceof Zebra zebra) {
                 if(zebra.isAlive()) {
                     numZebras++;
@@ -194,59 +191,17 @@ public class Field
         field.clear();
     }
     
-    //PURELY FOR TESTING PURPOSES, WILL NOT BE FINAL METHOD
+    /**
+     * Keeps the simulation constantly running no matter what
+     * @return true 
+     */
     public boolean isViable(){
         return true;
-    }
-
-    // /**
-     // * Return whether there is at least one rabbit and one fox in the field.
-     // * @return true if there is at least one rabbit and one fox in the field.
-     // */
-    // public boolean isViable()
-    // {
-        // //might need to change this so that it stops when one specie is alive
-        // // for now i cannot delete the rabbit and fox from the simulation
-        // // because of this method specifically and the fieldstats class
-        // boolean rabbitFound = false;
-        // boolean foxFound = false;
-        // Iterator<Animal> it = animals.iterator();
-        // while(it.hasNext() && ! (rabbitFound && foxFound)) {
-            // Animal anAnimal = it.next();
-            // if(anAnimal instanceof Rabbit rabbit) {
-                // if(rabbit.isAlive()) {
-                    // rabbitFound = true;
-                // }
-            // }
-            // else if(anAnimal instanceof Fox fox) {
-                // if(fox.isAlive()) {
-                    // foxFound = true;
-                // }
-            // }
-        // }
-        // return rabbitFound && foxFound;
-    // }
-    
-    /**
-     * Return whether there is at least two different species in the field
-     * Will probably change this to false in the future WHEN there are only predators left
-     * Predator class needs to be implemented for that
-     * @return true if there is at least two different species in the field
-     */
-    public boolean isViable2(){
-        boolean zebraFound;
-        boolean wildebeestFound;
-        boolean gazelleFound;
-        boolean cheetahFound;
-        boolean lionFound;
-        boolean hyenaFound;
-        Iterator<Animal> it = animals.iterator();
-        //while(it.hasNext() && !(
-        return false;
     }
     
     /**
      * Get the list of animals.
+     * @return animals A list of the animals
      */
     public List<Animal> getAnimals()
     {
@@ -274,6 +229,7 @@ public class Field
     /**
      * Grass grows faster in the rain, not at all in a heatwave, and normally any other time.
      * Grass can grow to a set maximum level 
+     * @param weather The weather that it currently is
      */
     public void growGrass(String weather)
     {
@@ -309,7 +265,7 @@ public class Field
     }
     
     /**
-     * return the value at the grass map location
+     * @return the value at the grass map location
      */
     public int getGrassAt(Location location)
     {
@@ -324,6 +280,9 @@ public class Field
         grassMap[location.row()][location.col()] = 0; 
     }
     
+    /**
+     * Prints out a map of the grass values in the terminal
+     */
     public void printGrassMap()
     {
         System.out.println("---Current grass map state---");

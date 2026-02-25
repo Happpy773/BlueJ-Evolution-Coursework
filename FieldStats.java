@@ -8,6 +8,10 @@ import java.util.Map;
  * 
  * @author David J. Barnes and Michael Kölling
  * @version 7.0
+ * 
+ * Extended by:
+ * @author Diego Abete and Harrison Buck
+ * @version 1.0
  */
 public class FieldStats
 {

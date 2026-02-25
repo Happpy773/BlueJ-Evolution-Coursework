@@ -12,6 +12,10 @@ import java.util.Map;
  * 
  * @author David J. Barnes and Michael Kölling
  * @version 7.0
+ * 
+ * Extended by:
+ * @author Diego Abete and Harrison Buck
+ * @version 1.0
  */
 public class SimulatorView extends JFrame
 {
@@ -41,16 +45,13 @@ public class SimulatorView extends JFrame
     {
         stats = new FieldStats();
         colors = new LinkedHashMap<>();
-        //setColor(Rabbit.class, Color.orange);
-        //setColor(Fox.class, Color.blue);
         
-        //new code
-        setColor(Zebra.class, Color.green); //green 
-        setColor(Wildebeest.class, Color.magenta); //magenta
-        setColor(Gazelle.class, Color.yellow); //yellow
-        setColor(Cheetah.class, Color.red); //red
-        setColor(Lion.class, Color.pink); //pink
-        setColor(Hyena.class, Color.cyan); //cyan
+        setColor(Zebra.class, Color.green); 
+        setColor(Wildebeest.class, Color.magenta); 
+        setColor(Gazelle.class, Color.yellow);
+        setColor(Cheetah.class, Color.red); 
+        setColor(Lion.class, Color.pink); 
+        setColor(Hyena.class, Color.cyan);
 
         setTitle("Savannah Simulation");
         stepLabel = new JLabel(STEP_PREFIX, JLabel.CENTER);

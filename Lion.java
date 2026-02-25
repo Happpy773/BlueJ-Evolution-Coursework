@@ -16,7 +16,7 @@ public class Lion extends Predator
     // The age at which a lion can start to breed.
     private static final int BREEDING_AGE = 15;
     // the age to which a lion can live.
-    private static final int MAX_AGE = 200; //150
+    private static final int MAX_AGE = 200;
     // the likelihood of a lion breeding.
     private static final double BREEDING_PROBABILITY = 0.09;
     // The maximum number of births.
@@ -43,6 +43,7 @@ public class Lion extends Predator
         super(randomAge, location);
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
+            foodLevel = rand.nextInt(MAX_FOOD_VALUE) + 1;
             randomHealthyOrNot();
         }
         else {
@@ -50,58 +51,8 @@ public class Lion extends Predator
             foodLevel = MAX_FOOD_VALUE;
             setHealthy();
         }
-        foodLevel = rand.nextInt(MAX_FOOD_VALUE);
     } 
 
-    /**
-     * This is what the lion does most of the time: it hunts for 
-     * zebras and wildebeests. In the process, it might breed, die of hunger, or 
-     * die of old age.
-     * @param currentField The field currently occupied
-     * @param nextFieldState The updated field.
-     */
-    public void act2(Field currentField, Field nextFieldState, String time, String weather){
-        incrementAge();
-        incrementHunger(weather);
-        if(isAlive()){
-            if(time.equals("Day")){
-                List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(getLocation());
-                if(! freeLocations.isEmpty()) {
-                    if(this.getGender().equals("Female")){
-                        //check if in adjacent fields there are other lions
-                        Animal animal = checkAnimalAdjacentLocation(currentField, nextFieldState);
-                        if(animal != null){
-                            boolean ableToBreed = checkCompatibleGender(this, animal);
-                            if(ableToBreed){
-                                giveBirth(nextFieldState, freeLocations, weather);
-                            }
-                        }
-                    }
-
-                }
-                // Move towards a source of food if found.
-                Location nextLocation = findFood(currentField);
-                if(nextLocation == null && ! freeLocations.isEmpty()){
-                    // No food found - try to move to a free location
-                    nextLocation = freeLocations.remove(0);
-                }
-                // See if it was possible to move.
-                if(nextLocation != null) {
-                    setLocation(nextLocation);
-                    nextFieldState.placeAnimal(this, nextLocation);
-                }
-                else {
-                    // Overcrowding.
-                    setDead();
-                }
-            }
-            else{
-                Location nextLocation = getLocation();
-                nextFieldState.placeAnimal(this, nextLocation);
-            }
-
-        }
-    }
     
     /**
      * This is what the lion does most of the time: it hunts for 
@@ -109,6 +60,8 @@ public class Lion extends Predator
      * die of old age.
      * @param currentField The field currently occupied
      * @param nextFieldState The updated field.
+     * @param time The current time of day
+     * @param weather The weather that it currently is
      */
     public void act(Field currentField, Field nextFieldState, String time, String weather){
         incrementAge();
@@ -123,8 +76,9 @@ public class Lion extends Predator
                 }
             }
             
-            
+            // act during the night
             if(time.equals("Night")){
+                //give birth sequence
                 List<Location> freeLocations = nextFieldState.getFreeAdjacentLocations(getLocation());
                 if(! freeLocations.isEmpty()) {
                     if(this.getGender().equals("Female")){
@@ -170,6 +124,7 @@ public class Lion extends Predator
                 }
             }
             else{
+                // stay exactly where it is
                 Location nextLocation = getLocation();
                 nextFieldState.placeAnimal(this, nextLocation);
             }
@@ -180,6 +135,8 @@ public class Lion extends Predator
     /**
      * This will check the animal's adjacent locations and check whether there is another one
      * of its species. It will return a list of the animals of its same type.
+     * @param currentField The current field state
+     * @param nextFieldState the state of the next field
      * @return The list of animals found or null if no animal found.
      */
     protected ArrayList checkAnimalAdjacentLocationList(Field currentField, Field nextFieldState){
@@ -209,7 +166,7 @@ public class Lion extends Predator
     }
 
     /**
-     * Returns the maximum age
+     * @return the maximum age
      */
     
     public int getMaxAge()
@@ -255,7 +212,7 @@ public class Lion extends Predator
     }
     
     /**
-     * Returns breeding age of the Lion
+     * @return breeding probability of the Lion
      */
     public double getBreedingProbability()
     {
@@ -263,7 +220,7 @@ public class Lion extends Predator
     }
     
     /**
-     * Returns breeding age of the Lion
+     * @return breeding age of the Lion
      */
     public int getBreedingAge()
     {
@@ -271,7 +228,7 @@ public class Lion extends Predator
     }
     
     /**
-     * Returns the maximum litter size of the Lion
+     * @return the maximum litter size of the Lion
      */
     public int getMaxLitterSize()
     {
@@ -279,7 +236,7 @@ public class Lion extends Predator
     }
     
     /**
-     * Returns the maximum food value of the Lion
+     * @return the maximum food value of the Lion
      */
     public int getMaxFoodValue()
     {
@@ -287,7 +244,7 @@ public class Lion extends Predator
     }
     
     /**
-     * returns the food value of the given animal to be consumed. 
+     * @return the food value of the given animal to be consumed. 
      * The food value is the amount of hunger that will be replenished when this animal is consumed
      */
     protected int getFoodValue(Animal animal)
